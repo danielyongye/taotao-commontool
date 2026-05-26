@@ -1,0 +1,87 @@
+:root {
+
+  /* =========================
+   * Primary
+   * ========================= */
+  --color-primary: #6366F1;
+  --color-primary-hover: #4F46E5;
+  --color-primary-light: #EEF0FF;
+  --color-primary-accent: #A78BFA;
+
+  /* =========================
+   * Gradients
+   * ========================= */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-accent) 100%);
+  --gradient-page-top: linear-gradient(180deg, #F3F0FF 0%, var(--bg-page) 100%);
+  --gradient-bg-soft: linear-gradient(135deg, #FCE7F3 0%, #E0E7FF 100%);
+
+  /* =========================
+   * Background
+   * ========================= */
+  --bg-page: #F6F7FB;
+  --bg-card: #FFFFFF;
+  --bg-hover: #F1F3FA;
+  --bg-emphasis: #EEF0FF;
+
+  /* =========================
+   * Border
+   * ========================= */
+  --border-color: #E9ECF3;
+
+  /* =========================
+   * Text
+   * ========================= */
+  --text-primary: #1D2129;
+  --text-regular: #4B5563;
+  --text-secondary: #8692A6;
+  --text-placeholder: #A1A8B8;
+  --text-disabled: #C7CCD6;
+  --text-white: #FFFFFF;
+
+  /* =========================
+   * Semantic
+   * ========================= */
+  --success: #22C55E;
+  --success-light: #E8FBEF;
+
+  --info: #3B82F6;
+  --info-light: #E8F1FF;
+
+  --warning: #F59E0B;
+  --warning-light: #FFF6E5;
+
+  --error: #EF4444;
+  --error-light: #FEECEB;
+
+  /* =========================
+   * Radius
+   * ========================= */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 999px;
+
+  /* =========================
+   * Shadow
+   * ========================= */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+
+  /* =========================
+   * Spacing
+   * ========================= */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+}

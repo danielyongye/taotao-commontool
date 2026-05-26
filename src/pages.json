@@ -1,0 +1,251 @@
+{
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/tab/tools",
+			"style": {
+				"navigationBarTitleText": "工具",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/tab/wish",
+			"style": {
+				"navigationBarTitleText": "愿望",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/tab/mine",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/rentCalculator/index",
+			"style": {
+				"navigationBarTitleText": "合租计算器",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F3F0FF",
+				"backgroundColor": "#F5F6FF",
+				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/memorialDayList/index",
+			"style": {
+				"navigationBarTitleText": "纪念日",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F3F0FF",
+				"backgroundColor": "#F5F6FF",
+				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/memorialDayEdit/index",
+			"style": {
+				"navigationBarTitleText": "添加纪念日",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F3F0FF",
+				"backgroundColor": "#F5F6FF",
+				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/memorialDayDetail/index",
+			"style": {
+				"navigationBarTitleText": "纪念日",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F3F0FF",
+				"backgroundColor": "#F6F7FB",
+				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#F6F7FB"
+			}
+		},
+		{
+			"path": "pages/countdownList/index",
+			"style": {
+				"navigationBarTitleText": "倒数日",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F3F0FF",
+				"backgroundColor": "#F6F7FB",
+				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#F6F7FB"
+			}
+		},
+		{
+			"path": "pages/countdownDetail/index",
+			"style": {
+				"navigationBarTitleText": "倒数日",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F3F0FF",
+				"backgroundColor": "#F6F7FB",
+				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#F6F7FB"
+			}
+		},
+		{
+			"path": "pages/countdownEdit/index",
+			"style": {
+				"navigationBarTitleText": "添加倒数日",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F3F0FF",
+				"backgroundColor": "#F6F7FB",
+				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#F6F7FB"
+			}
+		},
+		{
+			"path": "pages/wishlist/index",
+			"style": {
+				"navigationBarTitleText": "愿望清单",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F3F0FF",
+				"backgroundColor": "#F6F7FB",
+				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#F6F7FB"
+			}
+		},
+		{
+			"path": "pages/wishRecommend/index",
+			"style": {
+				"navigationBarTitleText": "愿望推荐",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F3F0FF",
+				"backgroundColor": "#F6F7FB",
+				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#F6F7FB"
+			}
+		},
+		{
+			"path": "pages/pokerLedger/index",
+			"style": {
+				"navigationBarTitleText": "德扑账本",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#DCE8FF",
+				"backgroundColor": "#F7F8FC",
+				"backgroundColorTop": "#DCE8FF",
+				"backgroundColorBottom": "#F7F8FC"
+			}
+		},
+		{
+			"path": "pages/pokerLedger/edit/index",
+			"style": {
+				"navigationBarTitleText": "记一局",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#DCE8FF",
+				"backgroundColor": "#F7F8FC",
+				"backgroundColorTop": "#DCE8FF",
+				"backgroundColorBottom": "#F7F8FC"
+			}
+		},
+		{
+			"path": "pages/mahjongLedger/index",
+			"style": {
+				"navigationBarTitleText": "麻将账本",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#DCE8FF",
+				"backgroundColor": "#F7F8FC",
+				"backgroundColorTop": "#DCE8FF",
+				"backgroundColorBottom": "#F7F8FC"
+			}
+		},
+		{
+			"path": "pages/mahjongLedger/edit/index",
+			"style": {
+				"navigationBarTitleText": "记一局",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#DCE8FF",
+				"backgroundColor": "#F7F8FC",
+				"backgroundColorTop": "#DCE8FF",
+				"backgroundColorBottom": "#F7F8FC"
+			}
+		},
+		{
+			"path": "pages/paohuziLedger/index",
+			"style": {
+				"navigationBarTitleText": "跑胡子账本",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F0F6FF",
+				"backgroundColor": "#F7F8FC",
+				"backgroundColorTop": "#F0F6FF",
+				"backgroundColorBottom": "#F7F8FC"
+			}
+		},
+		{
+			"path": "pages/paohuziLedger/edit/index",
+			"style": {
+				"navigationBarTitleText": "记一局",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F0F6FF",
+				"backgroundColor": "#F7F8FC",
+				"backgroundColorTop": "#F0F6FF",
+				"backgroundColorBottom": "#F7F8FC"
+			}
+		},
+		{
+			"path": "pages/dateCalculator/index",
+			"style": {
+				"navigationBarTitleText": "日期计算器",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F3F0FF",
+				"backgroundColor": "#F6F7FB",
+				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#F6F7FB"
+			}
+		},
+		{
+			"path": "pages/bmiCalculator/index",
+			"style": {
+				"navigationBarTitleText": "BMI计算器",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F3F0FF",
+				"backgroundColor": "#F6F7FB",
+				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#F6F7FB"
+			}
+		},
+		{
+			"path": "pages/randomNumber/index",
+			"style": {
+				"navigationBarTitleText": "随机数",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F3F0FF",
+				"backgroundColor": "#F6F7FB",
+				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#F6F7FB"
+			}
+		},
+		{
+			"path": "pages/unitConverter/index",
+			"style": {
+				"navigationBarTitleText": "单位换算",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#F3F0FF",
+				"backgroundColor": "#F6F7FB",
+				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#F6F7FB"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "常用工具",
+		"navigationBarBackgroundColor": "#ffffff",
+		"backgroundColor": "#f7f8fc"
+	}
+}

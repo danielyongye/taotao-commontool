@@ -1,0 +1,35 @@
+---
+description: Unified frontend engineering principles (includes API & request conventions) | uni-app + Vue3 Mini Program
+alwaysApply: true
+---
+
+# Frontend Engineering Principles (Senior, Uni-app + Vue3 WeChat Mini Program)
+
+This rule set captures the core habits I expect from a senior frontend engineer (10+ years) on this uni-app + Vue3 WeChat Mini Program project.  
+It is intentionally high-level: few rules, but **THEY MUST BE FOLLOWED CONSISTENTLY ON EVERY CODE CHANGE, NO EXCEPTIONS**. These rules take priority over any temporary implementation needs.
+
+## 1) Reuse and Single Source of Truth
+- **Reuse first**: Before adding any new logic, always search for existing `components/`, `composables/`, `utils/`, and `api/` you can reuse or extend first.
+- **No duplication**: If similar logic appears 2+ times across the codebase, extract it into a shared helper/composable/component immediately.
+- **One source of truth**: Constants, API paths, enums, and shared types must have a single authoritative definition. NEVER hardcode duplicate values in business code.
+
+## 2) Clear Architecture and Boundaries
+- **Pages**: Only responsible for data flow orchestration and screen-level behavior; avoid heavy business logic in templates or script setup.
+- **Components**: Build reusable, focused UI units; communicate only via `props` and `emit`, avoid direct coupling to global stores when possible. NEVER mutate props directly.
+- **Composables & utils**: Put reusable business flows in `useXxx` composables and pure utility functions in `utils/`, NOT inside page components.
+- **State**: Model Pinia stores around business domain concepts, not raw API DTOs; prefer clear, intention-revealing state names.
+
+## 3) API & Request Conventions
+- **Centralized API paths**: All HTTP endpoints come from centralized `apiUrl` management (e.g. in `@/api/index`); NEVER hardcode URLs in business code.
+- **Single request entry**: ALL network calls must go through the shared `request` wrapper in `@/utils/request`, NEVER use direct `uni.request` in business code.
+- **Cross-cutting concerns**: Auth, tenant handling, gateway details, and 401/global error handling live exclusively in the request layer; pages/components only focus on business success/failure logic.
+
+## 4) Quality, Safety, and Performance
+- **Async & errors**: Always handle failure paths for all async calls; NEVER silently swallow errors. Always log error context and provide clear, user-safe feedback.
+- **Data safety**: Defensively handle API responses before use; provide fallback values for all edge cases. NEVER mutate props or store state directly in components.
+- **Rendering discipline**: Keep expensive computations out of templates; use computed properties and small, focused functions. Always use stable, business-meaningful keys for list rendering, avoid array index as key.
+
+## 5) Readability and Long-Term Maintenance
+- **Intent over cleverness**: Name functions and variables by business intent (e.g. `fetchTaskList`, `isSubmitDisabled`), avoid overly clever, compressed, or ambiguous code.
+- **Simple control flow**: Prefer guard clauses and flat structures over deep nested conditionals.
+- **Change-friendly code**: When modifying code, leave it slightly better structured than you found it; design solutions with long-term maintenance cost in mind, not just to "make it work today".
