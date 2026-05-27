@@ -55,10 +55,6 @@ export default {
       this.items = getEnrichedMemorialDayList()
     },
     onItemTap(item) {
-      if (item.isDemo) {
-        uni.showToast({ title: '点击下方 + 添加你的纪念日', icon: 'none' })
-        return
-      }
       uni.navigateTo({ url: `${DETAIL_PAGE}?id=${item.id}` })
     },
     openAdd() {

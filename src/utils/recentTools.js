@@ -1,13 +1,18 @@
-import { QUICK_TOOLS } from '@/config/home.js'
+import { buildToolsMap, normalizeToolForHome } from '@/utils/toolsCatalog.js'
 
 const LEGACY_TOOL_IDS = {
   timeTransfer: 'rentCalculator',
-  lifewishlist: 'wishRecommend'
+  lifewishlist: 'wishRecommend',
+  poker: 'pokerLedger',
+  mahjong: 'mahjongLedger',
+  cards: 'cardsLedger'
 }
+
+const ALL_TOOLS_MAP = buildToolsMap()
 
 function getToolById(id) {
   const resolved = LEGACY_TOOL_IDS[id] || id
-  return QUICK_TOOLS.find((t) => t.id === resolved)
+  return normalizeToolForHome(ALL_TOOLS_MAP[resolved])
 }
 
 const STORAGE_KEY = 'recent_tool_ids'

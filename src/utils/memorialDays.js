@@ -15,44 +15,24 @@ export const MEMORIAL_THEMES = {
   birthday: { icon: 'gift-fill', iconBg: '#FFF3E0', valueColor: '#FF9F43' },
   meet: { icon: 'map-fill', iconBg: '#F3EBFF', valueColor: '#1a1d26' },
   grad: { icon: 'bookmark-fill', iconBg: '#E8F4FF', valueColor: '#1a1d26' },
-  travel: { icon: 'bag-fill', iconBg: '#E8F8F0', valueColor: '#1a1d26' }
+  travel: { icon: 'bag-fill', iconBg: '#E8F8F0', valueColor: '#1a1d26' },
+  bloom: { icon: 'star-fill', iconBg: '#FFF5F7', valueColor: '#EC4899' }
 }
 
 const DEMO_LIST = [
   {
     id: 1,
-    title: '和Ta在一起已经',
-    date: '2022-05-20',
+    title: '和 ta 在一起',
+    date: '2019-11-23',
     repeatYearly: false,
     theme: 'love'
   },
   {
     id: 2,
-    title: '我的生日',
-    date: '2000-05-26',
-    repeatYearly: true,
-    theme: 'birthday'
-  },
-  {
-    id: 3,
-    title: '我们相识纪念日',
-    date: '2021-03-14',
+    title: '花开的时间',
+    date: '2022-09-29',
     repeatYearly: false,
-    theme: 'meet'
-  },
-  {
-    id: 4,
-    title: '毕业纪念日',
-    date: '2020-06-20',
-    repeatYearly: false,
-    theme: 'grad'
-  },
-  {
-    id: 5,
-    title: '第一次旅行',
-    date: '2023-08-10',
-    repeatYearly: false,
-    theme: 'travel'
+    theme: 'bloom'
   }
 ]
 
@@ -123,7 +103,7 @@ function migrateLegacySingleDate(list) {
   return [
     {
       id: Date.now(),
-      title: '和Ta在一起已经',
+      title: '和 ta 在一起',
       date: String(legacy).substr(0, 10),
       repeatYearly: false,
       theme: 'love'
@@ -131,11 +111,19 @@ function migrateLegacySingleDate(list) {
   ]
 }
 
+function stripDemoMeta(item) {
+  const { isDemo, ...rest } = item
+  return rest
+}
+
 export function getMemorialDayList() {
-  let list = uni.getStorageSync(STORAGE_KEY)
+  const stored = uni.getStorageSync(STORAGE_KEY)
+  if (stored === '' || stored === null || stored === undefined) {
+    return DEMO_LIST.map((item) => ({ ...item, isDemo: true }))
+  }
+  let list = stored
   if (!Array.isArray(list)) list = []
   list = migrateLegacySingleDate(list)
-  if (!list.length) return DEMO_LIST.map((item) => ({ ...item, isDemo: true }))
   return list
 }
 
@@ -163,8 +151,7 @@ export function getEnrichedMemorialDayList() {
 export function getMemorialDayById(id) {
   const numId = Number(id)
   if (!numId) return null
-  const list = getMemorialDayList().filter((item) => !item.isDemo)
-  return list.find((item) => item.id === numId) || null
+  return getMemorialDayList().find((item) => item.id === numId) || null
 }
 
 /** 解析创建/更新时间（兼容旧数据：无字段时用 id 作为创建时间） */
@@ -200,7 +187,9 @@ export function upsertMemorialDay(entry) {
 
 export function deleteMemorialDay(id) {
   const numId = Number(id)
+  if (!numId) return
   const list = getMemorialDayList()
-    .filter((item) => !item.isDemo && item.id !== numId)
+    .filter((item) => item.id !== numId)
+    .map(stripDemoMeta)
   saveMemorialDayList(list)
 }

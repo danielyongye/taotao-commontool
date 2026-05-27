@@ -198,6 +198,28 @@
 			}
 		},
 		{
+			"path": "pages/gameRoom/index",
+			"style": {
+				"navigationBarTitleText": "牌局记分",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#EEF0FF",
+				"backgroundColor": "#F6F7FB",
+				"backgroundColorTop": "#EEF0FF",
+				"backgroundColorBottom": "#F6F7FB"
+			}
+		},
+		{
+			"path": "pages/gameRoom/room/index",
+			"style": {
+				"navigationBarTitleText": "房间记账",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#EEF0FF",
+				"backgroundColor": "#F6F7FB",
+				"backgroundColorTop": "#EEF0FF",
+				"backgroundColorBottom": "#F6F7FB"
+			}
+		},
+		{
 			"path": "pages/dateCalculator/index",
 			"style": {
 				"navigationBarTitleText": "日期计算器",
@@ -238,6 +260,17 @@
 				"navigationBarBackgroundColor": "#F3F0FF",
 				"backgroundColor": "#F6F7FB",
 				"backgroundColorTop": "#F3F0FF",
+				"backgroundColorBottom": "#F6F7FB"
+			}
+		},
+		{
+			"path": "pages/pokerScore/index",
+			"style": {
+				"navigationBarTitleText": "德扑记分",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#DCE8FF",
+				"backgroundColor": "#F6F7FB",
+				"backgroundColorTop": "#DCE8FF",
 				"backgroundColorBottom": "#F6F7FB"
 			}
 		}

@@ -59,8 +59,8 @@ export function getHomeDateItems(limit = 3) {
     return [
       {
         id: 'demo-memorial',
-        title: '和Ta在一起已经',
-        dateLabel: '2024年5月20日',
+        title: '和 ta 在一起',
+        dateLabel: '2019年11月23日',
         value: 520,
         valueUnit: '天',
         ...THEMES.memorial,
@@ -68,23 +68,13 @@ export function getHomeDateItems(limit = 3) {
         isDemo: true
       },
       {
-        id: 'demo-birthday',
-        title: '妈妈生日',
-        dateLabel: '2026年6月1日',
-        value: 19,
-        valueUnit: '天后',
-        ...THEMES.birthday,
-        url: COUNTDOWN_LIST_PAGE,
-        isDemo: true
-      },
-      {
-        id: 'demo-trip',
-        title: '家庭旅行',
-        dateLabel: '2026年8月15日',
-        value: 84,
-        valueUnit: '天后',
-        ...THEMES.countdown,
-        url: COUNTDOWN_LIST_PAGE,
+        id: 'demo-bloom',
+        title: '花开的时间',
+        dateLabel: '2022年9月29日',
+        value: 999,
+        valueUnit: '天',
+        ...THEMES.memorial,
+        url: LIST_PAGE_URL,
         isDemo: true
       }
     ].slice(0, limit)

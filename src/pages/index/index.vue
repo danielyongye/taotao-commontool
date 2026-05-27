@@ -31,7 +31,7 @@
                 @click="openTool(tool)"
               >
                 <view class="tool-icon" :style="{ background: tool.gradient }">
-                  <u-icon :name="tool.icon" size="24" color="#ffffff" />
+                  <u-icon :name="tool.icon" size="24" :color="tool.iconColor || '#ffffff'" />
                 </view>
                 <text class="tool-name">{{ tool.name }}</text>
                 <text class="tool-tag">{{ tool.tag }}</text>
@@ -91,10 +91,9 @@
               v-for="item in ledgerItems"
               :key="item.id"
               class="ledger-card"
-              :style="{ background: item.bg }"
               @click="onLedgerTap(item)"
             >
-              <view class="ledger-icon-wrap">
+              <view class="ledger-icon-wrap" :style="{ background: item.bg }">
                 <u-icon :name="item.icon" size="28" :color="item.iconColor" />
               </view>
               <text class="ledger-name">{{ item.name }}</text>
@@ -115,6 +114,8 @@
 import { QUICK_TOOLS, LEDGER_ITEMS } from '@/config/home.js'
 import { getHomeDateItems } from '@/utils/homeDates.js'
 import { recordRecentTool } from '@/utils/recentTools.js'
+import { mergeHomeQuickTools } from '@/utils/favoriteTools.js'
+import { buildToolsMap } from '@/utils/toolsCatalog.js'
 import AppTabBar from '@/components/AppTabBar.vue'
 
 export default {
@@ -123,15 +124,25 @@ export default {
     const sys = uni.getSystemInfoSync()
     return {
       statusBarHeight: sys.statusBarHeight || 20,
-      quickTools: QUICK_TOOLS,
       ledgerItems: LEDGER_ITEMS,
-      dateItems: []
+      dateItems: [],
+      quickTools: QUICK_TOOLS
     }
+  },
+  onLoad() {
+    uni.$on('favoriteToolsChanged', this.refreshQuickTools)
+  },
+  onUnload() {
+    uni.$off('favoriteToolsChanged', this.refreshQuickTools)
   },
   onShow() {
     this.dateItems = getHomeDateItems(3)
+    this.refreshQuickTools()
   },
   methods: {
+    refreshQuickTools() {
+      this.quickTools = mergeHomeQuickTools(QUICK_TOOLS, buildToolsMap(), 5)
+    },
     openTool(tool) {
       recordRecentTool(tool.id)
       uni.navigateTo({ url: tool.url })
@@ -484,14 +495,17 @@ export default {
   min-height: 240rpx;
   padding: 28rpx 24rpx;
   border-radius: 24rpx;
+  background: #ffffff;
+  border: 1rpx solid #e9ecf3;
   box-sizing: border-box;
   white-space: normal;
-  box-shadow: 0 6rpx 28rpx rgba(80, 100, 150, 0.06);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
 }
 
 .ledger-icon-wrap {
   width: 88rpx;
   height: 88rpx;
+  border-radius: 20rpx;
   display: flex;
   align-items: center;
   justify-content: center;

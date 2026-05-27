@@ -1,4 +1,5 @@
 import { INDEX_PAGE as POKER_LEDGER_PAGE } from '@/constants/pokerLedger.js'
+import { INDEX_PAGE as GAME_ROOM_PAGE } from '@/constants/gameRoom.js'
 import { INDEX_PAGE as MAHJONG_LEDGER_PAGE } from '@/constants/mahjongLedger.js'
 import { INDEX_PAGE as PAOHUZI_LEDGER_PAGE } from '@/constants/paohuziLedger.js'
 import {
@@ -36,6 +37,7 @@ export const TOOLS_SECTIONS = [
       {
         id: 'memorialDay',
         name: '纪念日',
+        desc: '记录重要日子与提醒',
         icon: 'heart-fill',
         iconColor: '#ffffff',
         gradient: 'linear-gradient(145deg, #FF9EC8 0%, #FF6B9D 100%)',
@@ -44,6 +46,7 @@ export const TOOLS_SECTIONS = [
       {
         id: 'countdownTime',
         name: '倒数日',
+        desc: '目标日期倒计时提醒',
         icon: 'calendar-fill',
         iconColor: '#ffffff',
         gradient: 'linear-gradient(145deg, #FFC56E 0%, #FF9F43 100%)',
@@ -52,6 +55,7 @@ export const TOOLS_SECTIONS = [
       {
         id: 'wishlist',
         name: '愿望清单',
+        desc: '收集心愿并跟踪完成',
         icon: 'checkmark-circle-fill',
         iconColor: '#ffffff',
         gradient: 'linear-gradient(145deg, #7EE0B8 0%, #4CD4A0 100%)',
@@ -60,14 +64,16 @@ export const TOOLS_SECTIONS = [
       {
         id: 'poker',
         name: '德扑账本',
+        desc: '德扑牌局输赢记账',
         icon: 'grid-fill',
-        iconColor: '#1a1d26',
-        gradient: 'linear-gradient(145deg, #F8F9FB 0%, #ECEEF2 100%)',
+        iconColor: '#ffffff',
+        gradient: 'linear-gradient(145deg, #34D399 0%, #22C55E 100%)',
         url: POKER_LEDGER_PAGE
       },
       {
         id: 'wishRecommend',
         name: '愿望推荐',
+        desc: '发现热门愿望灵感',
         icon: 'gift-fill',
         iconColor: '#ffffff',
         gradient: 'linear-gradient(145deg, #6ED4C8 0%, #3BB8A8 100%)',
@@ -83,33 +89,37 @@ export const TOOLS_SECTIONS = [
       {
         id: 'dateCalc',
         name: '日期计算器',
-        icon: 'calendar',
-        iconColor: '#4B8BFF',
-        bg: '#EEF4FF',
+        desc: '计算日期间隔与星期',
+        icon: 'calendar-fill',
+        iconColor: '#ffffff',
+        gradient: 'linear-gradient(145deg, #FDBA74 0%, #F97316 100%)',
         url: DATE_CALCULATOR_PAGE
       },
       {
         id: 'bmi',
         name: 'BMI计算器',
-        icon: 'level',
-        iconColor: '#4B8BFF',
-        bg: '#EEF4FF',
+        desc: '根据身高体重算指数',
+        icon: 'heart-fill',
+        iconColor: '#ffffff',
+        gradient: 'linear-gradient(145deg, #7EE0B8 0%, #4CD4A0 100%)',
         url: BMI_CALCULATOR_PAGE
       },
       {
         id: 'random',
         name: '随机数',
+        desc: '指定范围随机生成数',
         icon: 'reload',
-        iconColor: '#4B8BFF',
-        bg: '#EEF4FF',
+        iconColor: '#ffffff',
+        gradient: 'linear-gradient(145deg, #C4A8FF 0%, #9B7EDE 100%)',
         url: RANDOM_NUMBER_PAGE
       },
       {
         id: 'unit',
         name: '单位换算',
-        icon: 'grid',
-        iconColor: '#4B8BFF',
-        bg: '#EEF4FF',
+        desc: '常用计量单位换算',
+        icon: 'grid-fill',
+        iconColor: '#ffffff',
+        gradient: 'linear-gradient(145deg, #7EB3FF 0%, #4B8BFF 100%)',
         url: UNIT_CONVERTER_PAGE
       }
     ]
@@ -124,17 +134,17 @@ export const TOOLS_SECTIONS = [
         name: '德扑账本',
         desc: '记录每一局',
         icon: 'grid-fill',
-        iconColor: '#3D9A6E',
-        bg: 'linear-gradient(180deg, #F0FAF5 0%, #E2F5EC 100%)',
+        iconColor: '#ffffff',
+        gradient: 'linear-gradient(145deg, #34D399 0%, #22C55E 100%)',
         url: POKER_LEDGER_PAGE
       },
       {
         id: 'mahjongLedger',
         name: '麻将账本',
         desc: '收支一目了然',
-        icon: 'grid',
-        iconColor: '#D48806',
-        bg: 'linear-gradient(180deg, #FFF8F0 0%, #FFEFE0 100%)',
+        icon: 'grid-fill',
+        iconColor: '#ffffff',
+        gradient: 'linear-gradient(145deg, #FCD34D 0%, #F59E0B 100%)',
         url: MAHJONG_LEDGER_PAGE
       },
       {
@@ -142,26 +152,54 @@ export const TOOLS_SECTIONS = [
         name: '跑胡子账本',
         desc: '轻松记分不迷糊',
         icon: 'list',
-        iconColor: '#4B7CFF',
-        bg: 'linear-gradient(180deg, #F0F6FF 0%, #E3EEFF 100%)',
+        iconColor: '#ffffff',
+        gradient: 'linear-gradient(145deg, #60A5FA 0%, #3B82F6 100%)',
         url: PAOHUZI_LEDGER_PAGE
       },
       {
-        id: 'moreLedger',
-        name: '更多账本',
-        desc: '敬请期待',
-        icon: 'plus-circle-fill',
-        iconColor: '#9B7EDE',
-        bg: 'linear-gradient(180deg, #F6F2FF 0%, #EDE6FF 100%)',
-        url: null
+        id: 'gameRoom',
+        name: '牌局记分',
+        desc: '邀请好友零和记账',
+        icon: 'account-fill',
+        iconColor: '#ffffff',
+        gradient: 'linear-gradient(145deg, #A78BFA 0%, #6366F1 100%)',
+        url: GAME_ROOM_PAGE
+      },
+      {
+        id: 'pokerScore',
+        name: '德扑记分',
+        desc: '码量盈亏实时记录',
+        icon: 'star-fill',
+        iconColor: '#ffffff',
+        gradient: 'linear-gradient(145deg, #60A5FA 0%, #3B82F6 100%)',
+        url: '/pages/pokerScore/index'
       }
     ]
   },
   {
     id: 'game',
     title: '娱乐游戏',
-    layout: 'placeholder',
-    tools: []
+    layout: 'grid',
+    tools: [
+      {
+        id: 'gameRoom',
+        name: '牌局记分',
+        desc: '麻将跑胡子零和记账',
+        icon: 'account-fill',
+        iconColor: '#ffffff',
+        gradient: 'linear-gradient(145deg, #A78BFA 0%, #6366F1 100%)',
+        url: GAME_ROOM_PAGE
+      },
+      {
+        id: 'pokerScore',
+        name: '德扑记分',
+        desc: '码量盈亏一键记录',
+        icon: 'star-fill',
+        iconColor: '#ffffff',
+        gradient: 'linear-gradient(145deg, #60A5FA 0%, #3B82F6 100%)',
+        url: '/pages/pokerScore/index'
+      }
+    ]
   },
   {
     id: 'calc',

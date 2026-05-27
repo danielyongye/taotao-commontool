@@ -122,15 +122,6 @@
       >
         <text class="btn-primary-text">{{ submitLabel }}</text>
       </view>
-      <view
-        v-if="isEdit"
-        class="btn-danger"
-        hover-class="btn-danger--press"
-        :hover-stay-time="100"
-        @click="onDelete"
-      >
-        <text class="btn-danger-text">删除纪念日</text>
-      </view>
     </view>
 
     <u-datetime-picker
@@ -169,7 +160,6 @@ import {
 import {
   getMemorialDayById,
   upsertMemorialDay,
-  deleteMemorialDay,
   formatMemorialDateLabel
 } from '@/utils/memorialDays.js'
 
@@ -367,19 +357,6 @@ export default {
         uni.navigateBack()
       }, 400)
     },
-    onDelete() {
-      uni.showModal({
-        title: '删除纪念日',
-        content: '确定要删除这条纪念日吗？删除后无法恢复。',
-        confirmColor: DS.colorPrimary,
-        success: (res) => {
-          if (!res.confirm) return
-          deleteMemorialDay(this.editId)
-          uni.showToast({ title: '已删除', icon: 'success' })
-          setTimeout(() => uni.navigateBack(), 400)
-        }
-      })
-    }
   }
 }
 </script>
@@ -678,24 +655,4 @@ export default {
   color: var(--text-white);
 }
 
-.btn-danger {
-  margin-top: 16rpx;
-  height: 88rpx;
-  border-radius: var(--radius-full);
-  background: var(--bg-card);
-  border: 1rpx solid var(--error-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s ease;
-}
-
-.btn-danger--press {
-  background: var(--error-light);
-}
-
-.btn-danger-text {
-  font-size: 28rpx;
-  color: var(--error);
-}
 </style>

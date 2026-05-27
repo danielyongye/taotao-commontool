@@ -61,6 +61,14 @@
       >
         <text class="btn-primary-text">编辑纪念日</text>
       </view>
+      <view
+        class="btn-danger"
+        hover-class="btn-danger--press"
+        :hover-stay-time="100"
+        @click="confirmDelete"
+      >
+        <text class="btn-danger-text">删除纪念日</text>
+      </view>
     </view>
   </view>
 </template>
@@ -73,6 +81,7 @@ import { formatRecordMetaTime } from '@/utils/dateHelpers.js'
 import {
   getMemorialDayById,
   enrichMemorialDayItem,
+  deleteMemorialDay,
   resolveMemorialTimestamps,
   daysUntilYearly,
   remainingMsUntilYearly
@@ -230,7 +239,39 @@ export default {
     },
     goEdit() {
       if (!this.itemId) return
+      if (this.item && this.item.isDemo) {
+        uni.showToast({ title: '示例数据不可编辑，请添加你的纪念日', icon: 'none' })
+        return
+      }
       uni.navigateTo({ url: `${EDIT_PAGE}?id=${this.itemId}` })
+    },
+    confirmDelete() {
+      if (!this.itemId || !this.item) return
+      const name = this.item.title || '这条纪念日'
+      uni.showModal({
+        title: '删除纪念日',
+        content: `确定删除「${name}」吗？`,
+        confirmColor: DS.colorPrimary,
+        success: (res) => {
+          if (!res.confirm) return
+          uni.showModal({
+            title: '再次确认',
+            content: '删除后无法恢复，请再次确认是否删除。',
+            confirmText: '确认删除',
+            confirmColor: DS.error,
+            success: (res2) => {
+              if (!res2.confirm) return
+              this.doDelete()
+            }
+          })
+        }
+      })
+    },
+    doDelete() {
+      deleteMemorialDay(this.itemId)
+      this.stopTimer()
+      uni.showToast({ title: '已删除', icon: 'success' })
+      setTimeout(() => uni.navigateBack(), 400)
     }
   }
 }
@@ -482,5 +523,26 @@ function resolveDetailMode(item) {
   font-size: 30rpx;
   font-weight: 500;
   color: var(--text-white);
+}
+
+.btn-danger {
+  margin-top: 16rpx;
+  height: 88rpx;
+  border-radius: var(--radius-full);
+  background: var(--bg-card);
+  border: 1rpx solid var(--error-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+.btn-danger--press {
+  background: var(--error-light);
+}
+
+.btn-danger-text {
+  font-size: 28rpx;
+  color: var(--error);
 }
 </style>

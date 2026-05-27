@@ -13,14 +13,22 @@
       class="page-scroll"
       scroll-y
       enable-flex
-      :scroll-into-view="scrollIntoView"
+      :scroll-top="pageScrollTop"
       scroll-with-animation
       :show-scrollbar="false"
       @scroll="onPageScroll"
     >
     <!-- #endif -->
       <view class="head" :style="{ paddingTop: statusBarHeight + 'px' }">
-        <text class="title">全部工具</text>
+        <view class="head-row">
+          <text class="title">全部工具</text>
+          <view class="head-actions">
+            <view class="head-btn" @click="openFavoriteManager">
+              <u-icon :name="normalizeIconName('heart')" size="18" color="#6B7280" />
+              <text class="head-btn-text">收藏</text>
+            </view>
+          </view>
+        </view>
         <view class="search-wrap">
           <u-icon name="search" size="16" color="#B0B8C4" />
           <input
@@ -31,7 +39,7 @@
             confirm-type="search"
           />
           <view v-if="keyword" class="search-clear" @click="keyword = ''">
-            <u-icon name="close-circle-fill" size="16" color="#D1D5DB" />
+            <u-icon :name="normalizeIconName('close-circle')" size="16" color="#D1D5DB" />
           </view>
         </view>
       </view>
@@ -57,51 +65,21 @@
           >
             <text class="section-title">{{ section.title }}</text>
 
-            <view v-if="section.layout === 'grid'" class="grid-common">
+            <!-- unified 2-column card grid for all sections -->
+            <view v-if="section.tools && section.tools.length" class="grid-unified">
               <view
                 v-for="tool in section.tools"
                 :key="tool.id"
-                class="grid-item"
-                hover-class="grid-item-active"
+                class="tool-card"
+                hover-class="tool-card-active"
                 @click="openTool(tool)"
               >
-                <view class="grid-icon" :style="{ background: tool.gradient }">
-                  <u-icon :name="tool.icon" size="22" :color="tool.iconColor" />
+                <view class="tool-icon" :style="{ background: getToolCardBackground(tool) }">
+                  <u-icon :name="normalizeIconName(tool.icon)" size="22" :color="tool.iconColor" />
                 </view>
-                <text class="grid-label">{{ tool.name }}</text>
-              </view>
-            </view>
-
-            <view v-else-if="section.layout === 'outline'" class="grid-life">
-              <view
-                v-for="tool in section.tools"
-                :key="tool.id"
-                class="life-item"
-                hover-class="grid-item-active"
-                @click="openTool(tool)"
-              >
-                <view class="life-icon" :style="{ background: tool.bg }">
-                  <u-icon :name="tool.icon" size="20" :color="tool.iconColor" />
-                </view>
-                <text class="life-label">{{ tool.name }}</text>
-              </view>
-            </view>
-
-            <view v-else-if="section.layout === 'ledger'" class="grid-ledger">
-              <view
-                v-for="tool in section.tools"
-                :key="tool.id"
-                class="ledger-item"
-                :style="{ background: tool.bg }"
-                hover-class="grid-item-active"
-                @click="openTool(tool)"
-              >
-                <view class="ledger-icon-wrap">
-                  <u-icon :name="tool.icon" size="26" :color="tool.iconColor" />
-                </view>
-                <view class="ledger-text">
-                  <text class="ledger-name">{{ tool.name }}</text>
-                  <text class="ledger-desc">{{ tool.desc }}</text>
+                <view class="tool-text">
+                  <text class="tool-name">{{ tool.name }}</text>
+                  <text class="tool-desc">{{ tool.desc }}</text>
                 </view>
               </view>
             </view>
@@ -121,6 +99,46 @@
     </scroll-view>
     <!-- #endif -->
 
+    <!-- 收藏管理 -->
+    <view v-if="favoriteManagerVisible" class="fav-mask" @click="closeFavoriteManager">
+      <view class="fav-panel" @click.stop>
+        <view class="fav-head">
+          <text class="fav-title">收藏工具</text>
+          <text class="fav-sub">收藏后会出现在首页顶部</text>
+          <view class="fav-close" @click="closeFavoriteManager">
+            <u-icon name="close" size="18" color="#94A3B8" />
+          </view>
+        </view>
+
+        <scroll-view class="fav-body" scroll-y :show-scrollbar="false">
+          <view v-for="sec in favoriteCandidateSections" :key="sec.id" class="fav-sec">
+            <text class="fav-sec-title">{{ sec.title }}</text>
+            <view class="fav-list">
+              <view
+                v-for="tool in sec.tools"
+                :key="tool.id"
+                class="fav-item"
+                hover-class="fav-item-active"
+                @click="toggleFavoriteById(tool.id)"
+              >
+                <view class="fav-left">
+                  <view class="fav-dot" :style="{ background: getToolCardBackground(tool) }" />
+                  <text class="fav-name">{{ tool.name }}</text>
+                </view>
+                <view class="fav-right">
+                  <view
+                    :class="['fav-check', { checked: favoriteToolIds.includes(tool.id) }]"
+                  >
+                    <view class="fav-check-mark" />
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+
     <app-tab-bar active="tools" />
   </view>
 </template>
@@ -128,6 +146,8 @@
 <script>
 import { TOOLS_SIDEBAR, TOOLS_SECTIONS } from '@/config/toolsPage.js'
 import { recordRecentTool } from '@/utils/recentTools.js'
+import { getFavoriteToolIds, toggleFavoriteToolId } from '@/utils/favoriteTools.js'
+import { getToolCardBackground } from '@/utils/toolsCatalog.js'
 import AppTabBar from '@/components/AppTabBar.vue'
 
 export default {
@@ -137,23 +157,55 @@ export default {
     return {
       isH5: process.env.UNI_PLATFORM === 'h5',
       statusBarHeight: sys.statusBarHeight || 20,
-      sidebar: TOOLS_SIDEBAR,
       sections: TOOLS_SECTIONS,
-      activeCategory: 'common',
-      scrollIntoView: '',
+      activeCategory: '',
+      pageScrollTop: '',
       keyword: '',
       sectionTops: [],
-      scrollLock: false
+      scrollLock: false,
+      favoriteToolIds: [],
+      favoriteManagerVisible: false
     }
   },
   computed: {
+    // flat map of all tools by id for fast lookup
+    toolMap() {
+      return this.sections.reduce((acc, section) => {
+        ;(section.tools || []).forEach((tool) => { acc[tool.id] = tool })
+        return acc
+      }, {})
+    },
+    favoriteTools() {
+      return this.favoriteToolIds.map((id) => this.toolMap[id]).filter(Boolean)
+    },
+    sidebar() {
+      if (!this.favoriteTools.length) return TOOLS_SIDEBAR
+      return [{ id: 'favorite', name: '我喜欢的' }, ...TOOLS_SIDEBAR]
+    },
+    // prepend "我喜欢的" section when favorites exist
+    resolvedSections() {
+      if (!this.favoriteTools.length) return this.sections
+      return [
+        { id: 'favorite', title: '我喜欢的', tools: this.favoriteTools },
+        ...this.sections
+      ]
+    },
+    favoriteCandidateSections() {
+      return this.sections
+        .filter((sec) => Array.isArray(sec.tools) && sec.tools.length)
+        .map((sec) => ({
+          id: sec.id,
+          title: sec.title,
+          tools: sec.tools
+        }))
+    },
     displaySections() {
       const kw = this.keyword.trim().toLowerCase()
-      if (!kw) return this.sections
-      return this.sections
+      if (!kw) return this.resolvedSections
+      return this.resolvedSections
         .map((sec) => {
-          if (sec.layout === 'placeholder') return null
-          const tools = (sec.tools || []).filter((t) =>
+          if (!sec.tools?.length) return null
+          const tools = sec.tools.filter((t) =>
             t.name.toLowerCase().includes(kw) ||
             (t.desc && t.desc.toLowerCase().includes(kw))
           )
@@ -165,6 +217,8 @@ export default {
   },
   watch: {
     displaySections() {
+      // 搜索/收藏变化后，确保左侧有一个有效的默认选中
+      this.ensureActiveCategory()
       this.$nextTick(() => this.measureSections())
     }
   },
@@ -172,43 +226,71 @@ export default {
     this.$nextTick(() => this.measureSections())
   },
   onShow() {
+    this.favoriteToolIds = getFavoriteToolIds()
+    this.ensureActiveCategory()
     this.$nextTick(() => this.measureSections())
   },
   methods: {
+    normalizeIconName(name) {
+      const icon = String(name || '').trim()
+      const map = {
+        heart: 'heart-fill',
+        'close-circle': 'close-circle-fill',
+        calendar: 'calendar-fill',
+        grid: 'grid-fill'
+      }
+      return map[icon] || icon
+    },
+    ensureActiveCategory() {
+      const sidebarIds = (this.sidebar || []).map((s) => s.id)
+      const sectionIds = (this.displaySections || []).map((s) => s.id)
+      const candidate = sidebarIds.find((id) => sectionIds.includes(id)) || sectionIds[0] || sidebarIds[0] || ''
+      if (candidate && candidate !== this.activeCategory) {
+        this.activeCategory = candidate
+      }
+    },
+    openFavoriteManager() {
+      this.favoriteManagerVisible = true
+    },
+    closeFavoriteManager() {
+      this.favoriteManagerVisible = false
+    },
+    toggleFavoriteById(toolId) {
+      this.favoriteToolIds = toggleFavoriteToolId(toolId)
+      this.$nextTick(() => this.measureSections())
+    },
+    getToolCardBackground,
     scrollToCategory(id) {
-      this.activeCategory = id
+      const sectionIds = (this.displaySections || []).map((s) => s.id)
+      const targetId = sectionIds.includes(id) ? id : (sectionIds[0] || id)
+      this.activeCategory = targetId
       this.scrollLock = true
-      if (this.isH5) {
-        this.scrollToSectionH5(id)
+      this.$nextTick(() => {
+        this.measureSections(() => this.applyScrollToSection(targetId))
+      })
+    },
+    applyScrollToSection(targetId) {
+      const section = (this.sectionTops || []).find((s) => s.id === targetId)
+      if (!section) {
+        this.scrollLock = false
         return
       }
-      this.scrollIntoView = 'sec-' + id
-      setTimeout(() => {
-        this.scrollIntoView = ''
-        this.scrollLock = false
-      }, 400)
-    },
-    scrollToSectionH5(id) {
+      const top = Math.max(0, Math.round(section.top))
+      if (this.isH5) {
+        const el = this.getScrollEl()
+        if (el) el.scrollTop = top
+        setTimeout(() => {
+          this.scrollLock = false
+        }, 400)
+        return
+      }
+      this.pageScrollTop = ''
       this.$nextTick(() => {
-        const query = uni.createSelectorQuery().in(this)
-        query.select('#sec-' + id).boundingClientRect()
-        query.select('.page-scroll').boundingClientRect()
-        query.select('.page-scroll').scrollOffset()
-        query.exec((res) => {
-          const target = res[0]
-          const box = res[1]
-          const offset = res[2]
-          if (!target || !box) {
-            this.scrollLock = false
-            return
-          }
-          const top = (offset?.scrollTop || 0) + target.top - box.top
-          const el = this.getScrollEl()
-          if (el) el.scrollTop = Math.max(0, top)
-          setTimeout(() => {
-            this.scrollLock = false
-          }, 400)
-        })
+        this.pageScrollTop = top
+        setTimeout(() => {
+          this.pageScrollTop = ''
+          this.scrollLock = false
+        }, 500)
       })
     },
     getScrollEl() {
@@ -232,7 +314,7 @@ export default {
         this.activeCategory = current
       }
     },
-    measureSections() {
+    measureSections(done) {
       const query = uni.createSelectorQuery().in(this)
       query.select('.content-row').boundingClientRect()
       query.selectAll('.section').boundingClientRect()
@@ -241,12 +323,16 @@ export default {
         const rowRect = res[0]
         const rects = res[1]
         const scroll = res[2]
-        if (!rowRect || !rects || !rects.length) return
-        const baseScrollTop = scroll?.scrollTop || 0
+        if (!rowRect || !rects || !rects.length) {
+          if (typeof done === 'function') done()
+          return
+        }
+        const baseScrollTop = scroll?.scrollTop ?? this.getScrollEl()?.scrollTop ?? 0
         this.sectionTops = rects.map((r, i) => ({
           id: this.displaySections[i]?.id,
           top: baseScrollTop + r.top - rowRect.top
         }))
+        if (typeof done === 'function') done()
       })
     },
     openTool(tool) {
@@ -285,6 +371,32 @@ export default {
 .head {
   padding: 16rpx 32rpx 20rpx;
   background: #ffffff;
+}
+
+.head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.head-actions {
+  display: flex;
+  align-items: center;
+}
+
+.head-btn {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 16rpx;
+  border-radius: 999rpx;
+  background: #f3f4f6;
+}
+
+.head-btn-text {
+  margin-left: 8rpx;
+  font-size: 24rpx;
+  color: #6b7280;
+  font-weight: 600;
 }
 
 .title {
@@ -379,117 +491,64 @@ export default {
   margin-bottom: 24rpx;
 }
 
-.grid-common {
+/* unified 2-column card grid for all categories */
+.grid-unified {
   display: flex;
   flex-wrap: wrap;
   margin: 0 -8rpx;
 }
 
-.grid-item {
-  width: 33.33%;
+.tool-card {
+  position: relative;
+  width: calc(50% - 16rpx);
+  margin: 0 8rpx 16rpx;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8rpx 8rpx 20rpx;
-  box-sizing: border-box;
-}
-
-.grid-icon {
-  width: 96rpx;
-  height: 96rpx;
+  align-items: flex-start;
+  padding: 20rpx;
   border-radius: 24rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6rpx 20rpx rgba(75, 139, 255, 0.12);
-}
-
-.grid-label {
-  margin-top: 14rpx;
-  font-size: 24rpx;
-  color: #374151;
-  text-align: center;
-  line-height: 1.3;
-}
-
-.grid-life {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 -6rpx;
-}
-
-.life-item {
-  width: 25%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8rpx 6rpx 16rpx;
+  background: #ffffff;
+  border: 1rpx solid #e9ecf3;
   box-sizing: border-box;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
 }
 
-.life-icon {
-  width: 88rpx;
-  height: 88rpx;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.tool-card-active {
+  opacity: 0.9;
 }
 
-.life-label {
-  margin-top: 12rpx;
-  font-size: 22rpx;
-  color: #374151;
-  text-align: center;
-  line-height: 1.3;
-}
-
-.grid-ledger {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 -10rpx;
-}
-
-.ledger-item {
-  width: calc(50% - 20rpx);
-  margin: 0 10rpx 20rpx;
-  display: flex;
-  align-items: center;
-  padding: 24rpx 20rpx;
-  border-radius: 20rpx;
-  box-sizing: border-box;
-  box-shadow: 0 4rpx 20rpx rgba(80, 100, 150, 0.06);
-}
-
-.ledger-icon-wrap {
+.tool-icon {
   width: 72rpx;
   height: 72rpx;
   flex-shrink: 0;
+  border-radius: 20rpx;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.ledger-text {
+.tool-text {
   flex: 1;
-  margin-left: 12rpx;
+  margin-left: 14rpx;
   min-width: 0;
 }
 
-.ledger-name {
+.tool-name {
   display: block;
-  font-size: 28rpx;
+  font-size: 24rpx;
   font-weight: 600;
-  color: #1a1d26;
-  line-height: 1.3;
+  color: #1d2129;
+  line-height: 1.35;
+  white-space: nowrap;
 }
 
-.ledger-desc {
+.tool-desc {
   display: block;
-  margin-top: 6rpx;
+  margin-top: 8rpx;
   font-size: 22rpx;
-  color: #9ca3af;
-  line-height: 1.35;
+  color: #8692a6;
+  line-height: 1.45;
+  word-break: break-all;
+  white-space: normal;
 }
 
 .section-empty {
@@ -502,11 +561,148 @@ export default {
   color: #b0b8c4;
 }
 
-.grid-item-active {
-  opacity: 0.85;
-}
-
 .scroll-foot {
   height: 160rpx;
+}
+
+.fav-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 99;
+  display: flex;
+  align-items: flex-end;
+}
+
+.fav-panel {
+  width: 100%;
+  max-height: 78vh;
+  background: #ffffff;
+  border-radius: 28rpx 28rpx 0 0;
+  overflow: hidden;
+}
+
+.fav-head {
+  position: relative;
+  padding: 24rpx 28rpx 16rpx;
+  border-bottom: 1rpx solid #eef0f5;
+}
+
+.fav-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1d2129;
+}
+
+.fav-sub {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #8692a6;
+}
+
+.fav-close {
+  position: absolute;
+  right: 18rpx;
+  top: 18rpx;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fav-body {
+  max-height: calc(78vh - 120rpx);
+  padding: 12rpx 28rpx 28rpx;
+  box-sizing: border-box;
+}
+
+.fav-sec {
+  padding-top: 16rpx;
+}
+
+.fav-sec-title {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1d2129;
+  margin: 12rpx 0 12rpx;
+}
+
+.fav-list {
+  background: #ffffff;
+  border: 1rpx solid #e9ecf3;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+
+.fav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22rpx 20rpx;
+}
+
+.fav-item-active {
+  opacity: 0.9;
+}
+
+.fav-left {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.fav-dot {
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 9rpx;
+  margin-right: 12rpx;
+}
+
+.fav-name {
+  font-size: 26rpx;
+  color: #1d2129;
+  font-weight: 600;
+  max-width: 480rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fav-check {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 10rpx;
+  border: 2rpx solid #c7ccd6;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.fav-check.checked {
+  border-color: #6366f1;
+  background: #eef0ff;
+}
+
+.fav-check-mark {
+  width: 16rpx;
+  height: 8rpx;
+  border-left: 3rpx solid transparent;
+  border-bottom: 3rpx solid transparent;
+  transform: rotate(-45deg);
+  margin-top: -2rpx;
+}
+
+.fav-check.checked .fav-check-mark {
+  border-left-color: #6366f1;
+  border-bottom-color: #6366f1;
 }
 </style>
