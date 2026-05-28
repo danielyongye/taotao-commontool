@@ -13,8 +13,10 @@ import uView from "uview-ui";
 
 import App from './App'
 import './uni.promisify.adaptor'
+import pageShareMixin from '@/mixins/pageShare.js'
 
 Vue.use(uView);
+Vue.mixin(pageShareMixin);
 Vue.config.productionTip = false
 
 App.mpType = 'app'
