@@ -10,5 +10,6 @@
  */
 
 module.exports = {
-  transpileDependencies: ['uview-ui']
+  transpileDependencies: ['uview-ui'],
+  publicPath: process.env.NODE_ENV === 'production' ? '/taotao-commontool/' : '/'
 }
