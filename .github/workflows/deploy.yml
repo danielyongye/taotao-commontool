@@ -1,0 +1,33 @@
+# .github/workflows/deploy.yml
+name: Deploy UniApp to GitHub Pages
+
+on:
+  push:
+    branches: [ "main" ]   # 你的默认分支，可能是 main 或 master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write       # 允许向 gh-pages 分支推送内容
+    steps:
+    - name: Checkout 代码
+      uses: actions/checkout@v4
+
+    - name: 安装 Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: 安装依赖 (npm)
+      run: npm install      # 用 npm 安装依赖
+
+    - name: 打包 H5 项目
+      run: npm run build:h5 # 确保你的 package.json 中有这个脚本
+
+    - name: 部署到 GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist/build/h5   # 打包输出目录，根据你的项目确认
+        publish_branch: gh-pages       # 部署分支
