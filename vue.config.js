@@ -11,5 +11,6 @@
 
 module.exports = {
   transpileDependencies: ['uview-ui'],
-  publicPath: process.env.NODE_ENV === 'production' ? '/taotao-commontool/' : '/'
+  // 相对路径：GitHub Pages 子目录与本地 `serve dist/build/h5` 均可加载静态资源
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/'
 }

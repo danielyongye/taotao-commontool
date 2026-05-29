@@ -69,7 +69,7 @@
         "mode" : "hash",
         "base" : "./"
     },
-    "publicPath": "/taotao-commontool/"
+    "publicPath": "./"
 	},
 	"mp-alipay" : {
         "usingComponents" : true
